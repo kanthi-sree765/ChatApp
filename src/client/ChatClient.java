@@ -38,7 +38,7 @@ public class ChatClient {
                     listener.onMessage(msg);
                 }
             } catch (Exception e) {
-                listener.onMessage(new Message("System", null, "Disconnected"));
+                listener.onMessage(new Message("System", null, "Disconnected","/assets/avo.png"));
             }
         }).start();
     }
@@ -46,4 +46,4 @@ public class ChatClient {
     public interface MessageListener {
         void onMessage(Message message);
     }
-}
+}   

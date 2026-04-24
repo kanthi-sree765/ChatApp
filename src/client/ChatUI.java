@@ -17,6 +17,7 @@ public class ChatUI extends JFrame {
 
     private ChatClient client;
     private String username;
+    private String selectedIconPath;
 
     // 🎨 Pixel theme
     private final Color BG = new Color(170, 140, 255);
@@ -27,6 +28,7 @@ public class ChatUI extends JFrame {
     public ChatUI(String username) {
         this.username = username;
 
+        chooseAvatar();
         setTitle("Pixel Chat ✦ " + username);
         setSize(520, 620);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,6 +78,38 @@ public class ChatUI extends JFrame {
         setVisible(true);
     }
 
+    private void chooseAvatar() {
+
+            String[] options = {"avo", "cheesy", "choco", "drago", "orange"};
+
+            ImageIcon[] icons = new ImageIcon[options.length];
+
+            for (int i = 0; i < options.length; i++) {
+                ImageIcon original = new ImageIcon(
+                        getClass().getResource("/assets/" + options[i] + ".png")
+                );
+
+                Image scaled = original.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                icons[i] = new ImageIcon(scaled);
+            }
+
+            int choice = JOptionPane.showOptionDialog(
+                    this,
+                    "Choose your avatar",
+                    "Avatar Selection",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    icons,
+                    icons[0]
+            );
+
+            if (choice >= 0) {
+                selectedIconPath = "/assets/" + options[choice] + ".png";
+            } else {
+                selectedIconPath = "/assets/avo.png"; // default
+            }
+        }
     private void connect() {
         try {
             client = new ChatClient("localhost", 1234, username);
@@ -102,11 +136,22 @@ public class ChatUI extends JFrame {
             StyleConstants.setFontSize(style, 16);
             StyleConstants.setForeground(style, TEXT);
 
+            // 🔥 ALIGNMENT FIX
+            boolean isMe = msg.getSender().equals(username);
+
+            SimpleAttributeSet align = new SimpleAttributeSet();
+            StyleConstants.setAlignment(
+                    align,
+                    isMe ? StyleConstants.ALIGN_RIGHT : StyleConstants.ALIGN_LEFT
+            );
+            doc.setParagraphAttributes(doc.getLength(), 1, align, false);
+
             String time = new SimpleDateFormat("HH:mm")
                     .format(new Date(msg.getTimestamp()));
 
-            // 🧸 Choose icon randomly (or based on sender)
-            ImageIcon original = new ImageIcon(getClass().getResource("/assets/avo.png"));
+           ImageIcon original = new ImageIcon(
+                    getClass().getResource(msg.getIconPath())
+            );
 
             Image scaled = original.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 
@@ -131,7 +176,7 @@ public class ChatUI extends JFrame {
         String text = messageField.getText().trim();
 
         if (!text.isEmpty()) {
-            Message msg = new Message(username, null, text);
+            Message msg = new Message(username, null, text, selectedIconPath);
             client.sendMessage(msg);
             messageField.setText("");
         }

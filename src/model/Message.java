@@ -1,3 +1,28 @@
+// package model;
+
+// import java.io.Serializable;
+
+// public class Message implements Serializable {
+
+//     private String sender;
+//     private String receiver;
+//     private String content;
+//     private long timestamp;
+
+//     public Message(String sender, String receiver, String content) {
+//         this.sender = sender;
+//         this.receiver = receiver;
+//         this.content = content;
+//         this.timestamp = System.currentTimeMillis();
+//     }
+
+//     public String getSender() { return sender; }
+//     public String getReceiver() { return receiver; }
+//     public String getContent() { return content; }
+//     public long getTimestamp() { return timestamp; }
+// }
+
+
 package model;
 
 import java.io.Serializable;
@@ -8,11 +33,13 @@ public class Message implements Serializable {
     private String receiver;
     private String content;
     private long timestamp;
+    private String iconPath; // 🧸 NEW
 
-    public Message(String sender, String receiver, String content) {
+    public Message(String sender, String receiver, String content, String iconPath) {
         this.sender = sender;
         this.receiver = receiver;
         this.content = content;
+        this.iconPath = iconPath;
         this.timestamp = System.currentTimeMillis();
     }
 
@@ -20,4 +47,5 @@ public class Message implements Serializable {
     public String getReceiver() { return receiver; }
     public String getContent() { return content; }
     public long getTimestamp() { return timestamp; }
+    public String getIconPath() { return iconPath; }
 }
