@@ -78,6 +78,18 @@ public class ChatUI extends JFrame {
         setVisible(true);
     }
 
+    private Font loadHandwritingFont(float size) {
+        try {
+            Font font = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/assets/handwriting.ttf")
+            );
+            return font.deriveFont(size);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Font("Arial", Font.PLAIN, (int) size);
+        }
+    }
     private void chooseAvatar() {
 
             String[] options = {"avo", "cheesy", "choco", "drago", "orange"};
@@ -131,7 +143,13 @@ public class ChatUI extends JFrame {
             StyledDocument doc = chatPane.getStyledDocument();
 
             Style style = chatPane.addStyle("Style", null);
-            StyleConstants.setFontFamily(style, "Monospaced");
+            //StyleConstants.setFontFamily(style, "Monospaced");
+            Font customFont = loadHandwritingFont(16f);
+            StyleConstants.setFontFamily(style, customFont.getFamily());
+            StyleConstants.setBold(style, false); // handwriting looks better normal
+            StyleConstants.setFontSize(style, customFont.getSize());
+            StyleConstants.setForeground(style, TEXT);
+
             StyleConstants.setBold(style, true);
             StyleConstants.setFontSize(style, 16);
             StyleConstants.setForeground(style, TEXT);
